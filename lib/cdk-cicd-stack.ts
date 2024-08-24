@@ -1,5 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
-import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import { CodePipeline, CodePipelineSource, ManualApprovalStep, ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { PipelineStage } from './PipelineStage';
 
@@ -25,6 +25,14 @@ export class CdkCicdStack extends cdk.Stack {
     const testStage = pipeline.addStage(new PipelineStage(this, 'PipelineTestStage',{
       stageName:'test1'
     }))
+    const testStage2 = pipeline.addWave('PipelineTestStage2',{
+      pre: [
+        new ManualApprovalStep('approval needed',{
+          comment: "prove it or not"
+        })
+      ]
+      
+    })
 
 
   }
